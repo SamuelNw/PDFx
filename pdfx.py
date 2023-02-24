@@ -6,6 +6,8 @@ import PyPDF2
 pdf_to_watermark = ""
 watermark_pdf = ""
 watermark_output_pdf = ""
+encryption_target = ""
+encryption_output = ""
 
 
 class PDFx(object):
@@ -44,9 +46,29 @@ class PDFx(object):
 
         print("Done")
 
-    def password_protect(self, *args):
-        pass
+    def password_protect(self, doc_to_encrypt, encrypted_doc):
+        """
+        Info: Works to encrypt a PDF file.
+        - Create a reader object with the target document.
+        - Initiate a writer object.
+        - Add each page of the target document to the writer.
+        - Encrypt the writer.
+        - Write it all to the new file
+        """
+        reader = PyPDF2.PdfReader(doc_to_encrypt)
+        writer = PyPDF2.PdfWriter()
+        for page in reader.pages:
+            writer.add_page(page)
+
+        password = input("Enter the password to use on this document: ")
+        writer.encrypt(password)
+
+        with open(encrypted_doc, "wb") as file:
+            writer.write(file)
+
+        print("Done")
 
 
 # pdf_operations = PDFx()
+# pdf_operations.password_protect(encryption_target, encryption_output)
 # pdf_operations.watermark(pdf_to_watermark, watermark_pdf, watermark_output_pdf)
