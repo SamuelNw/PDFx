@@ -67,8 +67,3 @@ class PDFx(object):
             writer.write(file)
 
         print("Done")
-
-
-# pdf_operations = PDFx()
-# pdf_operations.password_protect(encryption_target, encryption_output)
-# pdf_operations.watermark(pdf_to_watermark, watermark_pdf, watermark_output_pdf)
