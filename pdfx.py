@@ -66,25 +66,36 @@ class PDFx(object):
 
         print("Done")
 
-    def password_protect(self, doc_to_encrypt, encrypted_doc):
+    def password_protect(self, pro_source, pro_destination="protected_pdfs/"):
         """
-        Info: Works to encrypt a PDF file.
-        - Create a reader object with the target document.
-        - Initiate a writer object.
-        - Add each page of the target document to the writer.
-        - Encrypt the writer.
-        - Write it all to the new file
+        Info: Works to encrypt all the PDF files in the given source folder
+        and stores the resultant password-protected pdfs in a new directory.
+        - Create a folder for the resulting files if one is not given.
+        - Loop through all docs in the source folder and do the following to each:
+            - Create a reader object with the target document.
+            - Initiate a writer object.
+            - Add each page of the target document to the writer.
+            - Encrypt the writer.
+            - Write it all to the new file
         """
-        reader = PyPDF2.PdfReader(doc_to_encrypt)
-        writer = PyPDF2.PdfWriter()
-        for page in reader.pages:
-            writer.add_page(page)
+        if pro_destination == "protected_pdfs/":
+            os.makedirs(pro_destination)
 
-        password = input("Enter the password to use on this document: ")
-        writer.encrypt(password)
+        for pdf in os.listdir(pro_source):
+            # Separate and store the filename
+            filename = os.path.split(pdf)[1]
+            filename = os.path.splitext(filename)[0]
 
-        with open(encrypted_doc, "wb") as file:
-            writer.write(file)
+            reader = PyPDF2.PdfReader(f"{pro_source}/{pdf}")
+            writer = PyPDF2.PdfWriter()
+            for page in reader.pages:
+                writer.add_page(page)
+
+            password = input("Enter the password to use on this document: ")
+            writer.encrypt(password)
+
+            with open(f"{pro_destination}{filename}.pdf", "wb") as file:
+                writer.write(file)
 
         print("Done")
 
@@ -93,5 +104,8 @@ class PDFx(object):
 work = PDFx()
 
 # Watermarks all the documents in the source folder and store them in the destination folder.
-work.watermark(watermark_source_folder, watermark_pdf
-               )
+# work.watermark(watermark_source_folder, watermark_pdf)
+
+# Encrypts the files in the source folder with the password a user gives, creates the destination
+# folder and stores them there.
+# work.password_protect(password_source_folder)
