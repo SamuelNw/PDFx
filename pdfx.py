@@ -71,6 +71,7 @@ class PDFx(object):
         Info: Works to encrypt all the PDF files in the given source folder
         and stores the resultant password-protected pdfs in a new directory.
         - Create a folder for the resulting files if one is not given.
+        - Get the password to be used from the user.
         - Loop through all docs in the source folder and do the following to each:
             - Create a reader object with the target document.
             - Initiate a writer object.
@@ -80,6 +81,8 @@ class PDFx(object):
         """
         if pro_destination == "protected_pdfs/":
             os.makedirs(pro_destination)
+
+        password = input("Enter the password to use on this document: ")
 
         for pdf in os.listdir(pro_source):
             # Separate and store the filename
@@ -91,7 +94,6 @@ class PDFx(object):
             for page in reader.pages:
                 writer.add_page(page)
 
-            password = input("Enter the password to use on this document: ")
             writer.encrypt(password)
 
             with open(f"{pro_destination}{filename}.pdf", "wb") as file:
